@@ -14,4 +14,4 @@
 
 ## Используемые инструменты
 
-`Python` `Scrapy` `re` `datetime`
+`Python` `Scrapy`
