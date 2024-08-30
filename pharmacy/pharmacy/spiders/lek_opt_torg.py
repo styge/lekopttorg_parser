@@ -14,10 +14,10 @@ class PharmacySpider(scrapy.Spider):
             url = response.urljoin(url)
             yield scrapy.Request(url=url, callback=self.parse_details)
 
-        # next_page = response.xpath('//div[@class="pagination"]/a/@href').get()
-        # if next_page:
-        #     next_page = response.urljoin(next_page)
-        #     yield scrapy.Request(url=next_page, callback=self.parse)
+        next_page = response.xpath('//div[@class="pagination"]/a/@href').get()
+        if next_page:
+            next_page = response.urljoin(next_page)
+            yield scrapy.Request(url=next_page, callback=self.parse)
 
     def parse_details(self, response):
         rpc = response.xpath("//div[@class='card-slider']/a[contains(@class, 'favorite_link')]/@data-id").get()
