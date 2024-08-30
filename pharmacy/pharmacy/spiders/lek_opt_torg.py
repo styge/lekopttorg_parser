@@ -14,14 +14,13 @@ class PharmacySpider(scrapy.Spider):
             url = response.urljoin(url)
             yield scrapy.Request(url=url, callback=self.parse_details)
 
-        next_page = response.xpath('//div[@class="pagination"]/a/@href').get()
-        if next_page:
-            next_page = response.urljoin(next_page)
-            yield scrapy.Request(url=next_page, callback=self.parse)
+        # next_page = response.xpath('//div[@class="pagination"]/a/@href').get()
+        # if next_page:
+        #     next_page = response.urljoin(next_page)
+        #     yield scrapy.Request(url=next_page, callback=self.parse)
 
     def parse_details(self, response):
-        rpc = response.xpath("//div[@class='card-slider']/a[@class='point favorite_link']/@data-id").get()
-        url = response.url
+        rpc = response.xpath("//div[@class='card-slider']/a[contains(@class, 'favorite_link')]/@data-id").get()
         title = response.xpath('//h1/text()').get().strip()
         brand = response.xpath('//span[@class="text-link"]/a/text()').get()
         section = response.xpath("//div[@itemprop='itemListElement']/span/a/@title").getall()
@@ -39,7 +38,7 @@ class PharmacySpider(scrapy.Spider):
         main_image = all_images[0]
         if 'https' not in all_images[0]:
             main_image = 'no photo'
-            all_images = 'no photo'
+            all_images = ['no photo']
 
         metadata_dict_keys = response.xpath('//div[@class="card__key-val"]//span[@class="key"]/text()').getall()[:-1]
         metadata_dict_keys = [key.replace('\n', '').strip(': ') for key in metadata_dict_keys]
@@ -54,7 +53,7 @@ class PharmacySpider(scrapy.Spider):
         yield {
             'timestamp': datetime.now(),
             'RPC': rpc,
-            'url': url,
+            'url': response.url,
             'title': title,
             'brand': brand,
             'section': section,
@@ -64,5 +63,5 @@ class PharmacySpider(scrapy.Spider):
                 'main_image': main_image,
                 'set_images': all_images
             },
-            "metadata": {**metadata_dict},
+            "metadata": metadata_dict,
         }
