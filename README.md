@@ -16,7 +16,7 @@
 
 **Клонируем проект, командой в терминале:**
 
-`git clone https://github.com/styge/lekopttorg_parser.git && cd xxxxxxxxxxx`
+`git clone https://github.com/styge/lekopttorg_parser.git && cd pharmacy_parsing`
 
 **Создаем виртуальную среду (для Python 3.x) командой:**
 
@@ -35,11 +35,11 @@
 
 ## Запуск
 
-Командой `cd lekopttorg_parser` переходим в первую папку проекта
+Командой `cd pharmacy` переходим в первую папку проекта
 
 **Находясь в директории проекта запустим скрипт командой:**
 
-`scrapy crawl lekopttorg_parser -O test_product_data.json`
+`scrapy crawl lek_opt_torg -O test_product_data.json`
 
 
 ## Используемые инструменты
