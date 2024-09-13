@@ -16,7 +16,7 @@
 
 **Клонируем проект, командой в терминале:**
 
-`git clone https://github.com/styge/lekopttorg_parser.git && cd pharmacy_parsing`
+`git clone https://github.com/styge/lekopttorg_parser.git && cd lekopttorg_parser`
 
 **Создаем виртуальную среду (для Python 3.x) командой:**
 
