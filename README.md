@@ -12,6 +12,36 @@
 
 - сохранить полученные данные в формате `.json`
 
+## Установка
+
+**Клонируем проект, командой в терминале:**
+
+`git clone https://github.com/styge/lekopttorg_parser.git && cd xxxxxxxxxxx`
+
+**Создаем виртуальную среду (для Python 3.x) командой:**
+
+`python -m venv venv`
+
+**Активируем виртуальную среду командой:**
+- Windows:
+`venv\Scripts\activate`
+
+- MacOS/Linux:
+`source venv/bin/activate`
+
+**В директории проекта установим зависимости, используя `pip` и файл `requirements.txt` командой:**
+
+`pip install -r requirements.txt`
+
+## Запуск
+
+Командой `cd lekopttorg_parser` переходим в первую папку проекта
+
+**Находясь в директории проекта запустим скрипт командой:**
+
+`scrapy crawl lekopttorg_parser -O test_product_data.json`
+
+
 ## Используемые инструменты
 
 `Python` `Scrapy`
