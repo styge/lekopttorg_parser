@@ -4,9 +4,16 @@ from datetime import datetime
 
 
 class PharmacySpider(scrapy.Spider):
-    name = "lek_opt_torg"
-    allowed_domains = ["lekopttorg.ru"]
-    start_urls = ["https://lekopttorg.ru/catalog/lekarstva_i_profilakticheskie_sredstva/vitaminy_i_mineraly/"]
+    name = 'lek_opt_torg'
+    allowed_domains = ['lekopttorg.ru']
+    start_urls = [
+        'https://lekopttorg.ru/catalog/lekarstva_i_profilakticheskie_sredstva/vitaminy_i_mineraly/',
+        'https://lekopttorg.ru/catalog/lekarstva_i_profilakticheskie_sredstva/pri_allergii/'
+    ]
+
+    def start_requests(self):
+        for url in self.start_urls:
+            yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
         urls = response.xpath('//div[@class="product"]/a/@href').getall()
@@ -25,7 +32,7 @@ class PharmacySpider(scrapy.Spider):
         brand = response.xpath('//span[@class="text-link"]/a/text()').get()
         section = response.xpath("//div[@itemprop='itemListElement']/span/a/@title").getall()
 
-        price = response.xpath("//div[@itemprop='offers']/span[contains(@class, 'slider-price')]/text()").get()
+        price = response.xpath('//div[@itemprop="offers"]/span[contains(@class, "slider-price")]/text()').get()
         price = int(re.findall('\d+', price)[0])
 
         availability = response.xpath('//div[@class="av-sidebar"]')
@@ -34,18 +41,18 @@ class PharmacySpider(scrapy.Spider):
         else:
             in_stock = False
 
+        assets = {'main_image': '', 'all_images': []}
         all_images = response.xpath('//div[@class="card-slider-g__pic"]//img/@src').getall()
-        main_image = all_images[0]
-        if 'https' not in all_images[0]:
-            main_image = 'no photo'
-            all_images = ['no photo']
+        if all_images:
+            assets['main_image'] = all_images[0]
+            assets['all_images'] = all_images
 
         metadata_dict_keys = response.xpath('//div[@class="card__key-val"]//span[@class="key"]/text()').getall()[:-1]
         metadata_dict_keys = [key.replace('\n', '').strip(': ') for key in metadata_dict_keys]
         metadata_dict_keys = [key for key in metadata_dict_keys if key != '']
 
         metadata_dict_values = response.xpath('//div[@class="card__key-val"]//span[@class="val"]/text() |'
-                                                  '//div[@class="card__key-val"]//span[@class="text-link"]//a/text()').getall()
+                                              '//div[@class="card__key-val"]//span[@class="text-link"]//a/text()').getall()
         metadata_dict_values = [value.replace('\n', '').strip(': ') for value in metadata_dict_values]
 
         metadata_dict = dict(zip(metadata_dict_keys, metadata_dict_values))
@@ -59,9 +66,6 @@ class PharmacySpider(scrapy.Spider):
             'section': section,
             'price': price,
             'in_stock': in_stock,
-            'assets': {
-                'main_image': main_image,
-                'set_images': all_images
-            },
-            "metadata": metadata_dict,
+            'assets': assets,
+            'metadata': metadata_dict,
         }
